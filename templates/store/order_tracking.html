@@ -1,0 +1,47 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Track Your Order{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Track Your Order</h2>
+    
+    {% if orders %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Placed On</th>
+                    <th>Invoice</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>${{ order.total_amount }}</td>
+                    <td>{{ order.created_at }}</td>
+                    <td>
+                        {% if order.status == "Delivered" %}
+                            <a href="{% url 'generate_invoice' order.id %}" class="btn btn-primary">Download Invoice</a>
+                        {% else %}
+                            <span class="text-muted">Invoice available after delivery</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have no orders yet.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <h4>Thank you for shopping with us! 😊</h4>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

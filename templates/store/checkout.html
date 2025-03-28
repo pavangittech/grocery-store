@@ -1,0 +1,38 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Checkout</h2>
+    <form method="POST" action="{% url 'process_payment' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Name:</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Phone:</label>
+            <input type="text" name="phone" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Total Amount: ${{ cart.get_total_price }}</label>
+            <input type="hidden" name="amount" value="{{ cart.get_total_price }}">
+        </div>
+        <div class="mb-3">
+            <label>Payment Method:</label>
+            <select name="payment_method" class="form-control">
+                <option value="stripe">Credit/Debit Card (Stripe)</option>
+                <option value="razorpay">Razorpay</option>
+                <option value="paytm">Paytm</option>
+                <option value="phonepe">PhonePe</option>
+                <option value="gpay">Google Pay</option>
+            </select>
+        </div>
+        <!-- Hidden status field -->
+        <input type="hidden" name="status" value="Pending"> 
+    
+        <button type="submit" class="btn btn-success">Proceed to Payment</button>
+    </form>    
+</div>
+{% endblock %}
