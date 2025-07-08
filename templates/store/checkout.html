@@ -3,36 +3,110 @@
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Checkout</h2>
-    <form method="POST" action="{% url 'process_payment' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label>Name:</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Phone:</label>
-            <input type="text" name="phone" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Total Amount: ${{ cart.get_total_price }}</label>
-            <input type="hidden" name="amount" value="{{ cart.get_total_price }}">
-        </div>
-        <div class="mb-3">
-            <label>Payment Method:</label>
-            <select name="payment_method" class="form-control">
-                <option value="stripe">Credit/Debit Card (Stripe)</option>
-                <option value="razorpay">Razorpay</option>
-                <option value="paytm">Paytm</option>
-                <option value="phonepe">PhonePe</option>
-                <option value="gpay">Google Pay</option>
-            </select>
-        </div>
-        <!-- Hidden status field -->
-        <input type="hidden" name="status" value="Pending"> 
-    
-        <button type="submit" class="btn btn-success">Proceed to Payment</button>
-    </form>    
+<style>
+    .checkout-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 80vh;
+    }
+
+    .checkout-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        padding: 40px 30px;
+        width: 100%;
+        max-width: 600px;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .form-control,
+    select.form-control {
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .btn-checkout {
+        width: 100%;
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 12px;
+        background-color: #198754;
+        border: none;
+        transition: 0.3s;
+    }
+
+    .btn-checkout:hover {
+        background-color: #157347;
+    }
+
+    .checkout-title {
+        text-align: center;
+        color: #0d6efd;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .checkout-summary {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="checkout-wrapper mt-5">
+    <div class="checkout-card">
+        <h2 class="checkout-title">🧾 Checkout</h2>
+        <form method="POST" action="{% url 'process_payment' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" required placeholder="Enter your name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="text" name="phone" class="form-control" required placeholder="e.g., 9876543210">
+            </div>
+            <div class="mb-3 checkout-summary">
+                Total Amount: <strong>${{ cart.get_total_price }}</strong>
+                <input type="hidden" name="amount" value="{{ cart.get_total_price }}">
+            </div>
+            <div class="mb-3">
+                <label for="payment_method" class="form-label">Payment Method</label>
+                <select id="payment_method" name="payment_method" class="form-control" required>
+                    <option value="stripe">Credit/Debit Card (Demo)</option>
+                    <option value="razorpay">Razorpay (Demo)</option>
+                    <option value="paytm">Paytm (Demo)</option>
+                    <option value="phonepe">PhonePe (Demo)</option>
+                    <option value="gpay">Google Pay (Demo)</option>
+                </select>
+
+            </div>
+
+            <!-- Hidden status field -->
+            <input type="hidden" name="status" value="Pending"> 
+
+            <button type="submit" class="btn btn-checkout mt-4">💰 Proceed to Payment</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

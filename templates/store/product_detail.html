@@ -1,0 +1,17 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+      <h2>{{ product.name }}</h2>
+      <p class="text-muted">{{ product.description }}</p>
+      <h4 class="text-success">$ {{ product.price }}</h4>
+      <a href="{% url 'cart_add' product.id %}" class="btn btn-success mt-3">Add to Cart</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

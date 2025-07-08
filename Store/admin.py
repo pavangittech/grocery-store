@@ -1,7 +1,11 @@
 from django.contrib import admin
 from .models import Product, Order, orderitem, Payment
+from .models import Wishlist
 
 # Register your models here.
+
+admin.site.register(Wishlist)
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'stock')
@@ -9,8 +13,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'status','created_at')
-    list_filter = ('status',)
+    list_display = ['id', 'user', 'total_amount', 'status', 'created_at']
+    list_filter = ['status']
+    search_fields = ['user__username', 'id']
 
 
 @admin.register(orderitem)

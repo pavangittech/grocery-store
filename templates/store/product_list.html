@@ -3,21 +3,118 @@
 {% block title %}Products - Grocery Store{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4">Our Products</h2>
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">${{ product.price }}</p>
-                    <a href="{% url 'cart_add' product.id %}" class="btn btn-success">Add to Cart</a>
-                </div>
-            </div>
+<style>
+  .product-card {
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    border: none;
+    position: relative;
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  }
+
+  .product-card img {
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+  }
+
+  .product-title {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  .product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #28a745;
+  }
+
+  .btn-add {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+  }
+
+  .wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    border: none;
+    font-size: 1.3rem;
+    color: #e0245e;
+    transition: transform 0.2s ease;
+    z-index: 2;
+  }
+
+  .wishlist-btn:hover {
+    transform: scale(1.2);
+    color: #c2185b;
+  }
+
+  @media (max-width: 767px) {
+    .product-card img {
+      height: 180px;
+    }
+  }
+</style>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary fw-bold">🛍️ Our Featured Products</h2>
+
+  <!-- 🔽 Category Filter -->
+  <form method="GET" class="mb-4 d-flex justify-content-center">
+    <label for="category-select" class="visually-hidden">Filter by category</label>
+    <select id="category-select" name="category" onchange="this.form.submit()" class="form-select w-auto">
+      <option value="">All Categories</option>
+      <option value="fruits" {% if request.GET.category == 'fruits' %}selected{% endif %}>Fruits</option>
+      <option value="vegetables" {% if request.GET.category == 'vegetables' %}selected{% endif %}>Vegetables</option>
+      <option value="snacks" {% if request.GET.category == 'snacks' %}selected{% endif %}>Snacks</option>
+      <option value="drinks" {% if request.GET.category == 'drinks' %}selected{% endif %}>Drinks</option>
+    </select>
+  </form>
+  <style>
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      border: 0 !important;
+    }
+  </style>
+
+  <!-- ✅ Product Grid -->
+  <div class="row g-4">
+    {% for product in products %}
+      <div class="col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch">
+        <div class="card product-card w-100">
+          <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+          
+          {% if user.is_authenticated %}
+            <a href="{% url 'add_to_wishlist' product.id %}" class="wishlist-btn" title="Add to Wishlist">❤️</a>
+          {% endif %}
+
+          <div class="card-body d-flex flex-column">
+            <h5 class="product-title mb-2">{{ product.name }}</h5>
+            <p class="product-price mb-3">${{ product.price }}</p>
+            <a href="{% url 'cart_add' product.id %}" class="btn btn-success btn-add mt-auto">🛒 Add to Cart</a>
+          </div>
         </div>
-        {% endfor %}
-    </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <p class="text-center text-muted">No products available in this category.</p>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

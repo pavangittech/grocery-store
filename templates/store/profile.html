@@ -1,0 +1,15 @@
+{% extends 'store/base.html' %}
+{% block title %}Your Profile{% endblock %}
+
+{% block content %}
+<h2>Your Orders</h2>
+<ul class="list-group">
+    {% for order in orders %}
+    <li class="list-group-item">
+        <span>Order #{{ order.id }} | {{ order.status }} | ₹{{ order.total_amount }}</span>
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">You haven't placed any orders yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
